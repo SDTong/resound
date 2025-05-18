@@ -4,7 +4,7 @@ use std::borrow::Cow;
 
 use audio::process;
 
-use crate::interactive::{print_list, PROMPT_DEFAULT_COW, PROMPT_ERR_COMMOND_COW};
+use crate::interactive::{PROMPT_DEFAULT_COW, PROMPT_ERR_COMMOND_COW, print_list};
 
 pub(super) fn run_commond<'a, I>(commond_iter: &mut I) -> Cow<'_, str>
 where
