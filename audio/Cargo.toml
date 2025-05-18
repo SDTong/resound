@@ -1,0 +1,8 @@
+[package]
+name = "audio"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+coreaudio-sys = { version = "0.2", default-features = false, features = ["core_audio"] }
+objc = "0.2"
