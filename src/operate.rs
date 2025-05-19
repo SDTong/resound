@@ -13,8 +13,8 @@ where
 {
     let token = commond_iter.next();
     match token {
-        Some("process") => process_ope::run_commond(commond_iter),
         Some("help") => help(),
+        Some("process") => process_ope::run_commond(commond_iter),
         _ => PROMPT_ERR_COMMOND_COW,
     }
 }

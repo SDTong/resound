@@ -12,11 +12,24 @@ where
 {
     let token = commond_iter.next();
     match token {
+        Some("help") => help(),
         Some("listall") => list_all(),
         _ => PROMPT_ERR_COMMOND_COW,
     }
 }
 
+// show help
+fn help() -> Cow<'static, str> {
+    print_list(&HELP_CONTENT);
+    PROMPT_ERR_COMMOND_COW
+}
+
+const HELP_CONTENT: [[(Cow<'_, str>, Cow<'_, str>); 1]; 1] = [[(
+    Cow::Borrowed("listall"),
+    Cow::Borrowed("show all process"),
+)]];
+
+// show all process
 fn list_all() -> Cow<'static, str> {
     let process_vec = process::list().unwrap();
     let content_vec = process_vec
