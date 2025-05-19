@@ -6,12 +6,5 @@ mod interactive;
 mod operate;
 
 fn main() {
-    let mut commond;
-    let mut prompt = interactive::PROMPT_DEFAULT_COW;
-    let mut commond_iter;
-    loop {
-        commond = interactive::wait_commond(&prompt);
-        commond_iter = commond.split_whitespace();
-        prompt = operate::run_commond(&mut commond_iter);
-    }
+    operate::run();
 }

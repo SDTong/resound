@@ -21,7 +21,7 @@ where
 // show help
 fn help() -> Cow<'static, str> {
     print_list(&HELP_CONTENT);
-    PROMPT_ERR_COMMOND_COW
+    PROMPT_DEFAULT_COW
 }
 
 const HELP_CONTENT: [[(Cow<'_, str>, Cow<'_, str>); 1]; 1] = [[(
