@@ -3,8 +3,11 @@
 use std::{borrow::Cow, ffi::CStr, ptr, str};
 
 use coreaudio_sys::{
-    Boolean, CFIndex, CFRange, CFStringGetBytes, CFStringRef, kCFStringEncodingUTF8,
+    Boolean, CFRange, CFStringCreateWithBytes, CFStringGetBytes, CFStringRef, kCFAllocatorDefault,
+    kCFStringEncodingUTF8,
 };
+
+use super::acf_index::CFIndexConvertible as _;
 
 // 获取字符串长度
 #[inline]
@@ -17,11 +20,26 @@ fn drop(cf_str_ref: CFStringRef) {
     unsafe { coreaudio_sys::CFRelease(cf_str_ref as coreaudio_sys::CFTypeRef) };
 }
 
+// 和macos的core audio 框架交互时，部分函数会获取 CFString 的所有权，
+// 所以只提供crate内部函数，不做rust风格封装
+// 会拷贝字节，如果不把所有权交给其它函数，那么调用者需要释放内存
+pub(crate) fn create_cf_string_ref(string: &str) -> CFStringRef {
+    unsafe {
+        CFStringCreateWithBytes(
+            kCFAllocatorDefault,
+            string.as_ptr(),
+            string.len().to_cfindex(),
+            kCFStringEncodingUTF8,
+            false as Boolean,
+        )
+    }
+}
+
 // to String of rust, and drop CFString
 pub(crate) fn into_string_drop(cf_str_ref: CFStringRef) -> String {
-    let s = into_string(cf_str_ref).into_owned();
+    let string = into_string(cf_str_ref).into_owned();
     drop(cf_str_ref);
-    s
+    string
 }
 
 // to String of rust
@@ -66,13 +84,13 @@ fn into_string(cf_str_ref: CFStringRef) -> Cow<'static, str> {
                 0,
                 false as Boolean,
                 buffer.as_mut_ptr(),
-                buffer.len() as CFIndex,
+                buffer.len().to_cfindex(),
                 &mut bytes_used,
             );
             assert_eq!(chars_written, len);
             // This is dangerous; we over-allocate and null-terminate the string (during
             // initialization).
-            assert_eq!(bytes_used, buffer.len() as CFIndex);
+            assert_eq!(bytes_used, buffer.len().to_cfindex());
 
             Cow::Owned(String::from_utf8_unchecked(buffer))
         }

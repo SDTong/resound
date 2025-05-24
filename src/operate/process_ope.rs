@@ -24,10 +24,10 @@ fn help() -> Cow<'static, str> {
     PROMPT_DEFAULT_COW
 }
 
-const HELP_CONTENT: [[(Cow<'_, str>, Cow<'_, str>); 1]; 1] = [[(
-    Cow::Borrowed("listall"),
-    Cow::Borrowed("show all process"),
-)]];
+const HELP_CONTENT: [[(Cow<'_, str>, Cow<'_, str>); 1]; 2] = [
+    [(Cow::Borrowed("help"), Cow::Borrowed("show this"))],
+    [(Cow::Borrowed("listall"), Cow::Borrowed("show all process"))],
+];
 
 // show all process
 fn list_all() -> Cow<'static, str> {

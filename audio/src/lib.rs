@@ -8,6 +8,9 @@ use error::{AudioError, Result};
 use std::cell;
 
 pub use core_audio::process;
+pub use core_audio::tap;
+// 统一外部模块使用的定义
+pub type AudioObjectId = coreaudio_sys::AudioObjectID;
 
 fn get_or_try_init<'a, T, F>(once_cell: &'a cell::OnceCell<T>, f: F) -> Result<&'a T>
 where

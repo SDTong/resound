@@ -6,7 +6,21 @@ use coreaudio_sys::{AudioObjectID, AudioObjectPropertyAddress, CFStringRef, UInt
 
 use crate::{Result, error::AudioError, foundation};
 
+// 检查 AudioHardwareBase.h 函数结果
+macro_rules! check_status {
+    ($msg:expr, $status:expr) => {
+        if $status != crate::core_audio::K_AUDIO_HARDWARE_NO_ERROR {
+            return Err(AudioError::with_status_msg(
+                $msg,
+                crate::core_audio::err_msg_hardware_status($status),
+                $status,
+            ));
+        }
+    };
+}
+
 pub mod process;
+pub mod tap;
 
 const CF_STR_REF_SIZE: UInt32 = mem::size_of::<CFStringRef>() as UInt32;
 
@@ -73,19 +87,6 @@ fn err_msg_hardware_status(status: coreaudio_sys::OSStatus) -> &'static str {
         }
         _ => "unknow error[unknow: null]",
     }
-}
-
-// 检查 AudioHardwareBase.h 函数结果
-macro_rules! check_status {
-    ($msg:expr, $status:expr) => {
-        if $status != K_AUDIO_HARDWARE_NO_ERROR {
-            return Err(AudioError::with_status_msg(
-                $msg,
-                err_msg_hardware_status($status),
-                $status,
-            ));
-        }
-    };
 }
 
 fn build_property_address(

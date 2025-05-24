@@ -1,0 +1,9 @@
+
+
+# --force: 强制覆盖现有签名（如果有的话）
+# --sign -: 使用即席签名 (ad-hoc sign)
+# --entitlements debug.entitlements: 指定包含所需授权的文件
+# ./target/debug/your_executable_name: 你要签名的目标文件
+codesign --force --sign - --entitlements debug.entitlements ./target/debug/test_tap
+
+
