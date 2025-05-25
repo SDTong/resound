@@ -5,7 +5,7 @@ use std::cell::OnceCell;
 
 use coreaudio_sys::AudioObjectID;
 
-use crate::{error::Result, get_or_try_init};
+use crate::{aoerror::Result, get_or_try_init};
 
 use super::{build_property_address, get_property_data_list, get_property_data_string};
 

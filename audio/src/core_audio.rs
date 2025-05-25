@@ -4,7 +4,7 @@ use std::{ffi::c_void, mem, ptr::null};
 
 use coreaudio_sys::{AudioObjectID, AudioObjectPropertyAddress, CFStringRef, UInt32};
 
-use crate::{Result, error::AudioError, foundation};
+use crate::{Result, aoerror::AudioError, foundation};
 
 // 检查 AudioHardwareBase.h 函数结果
 macro_rules! check_status {

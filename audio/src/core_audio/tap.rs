@@ -9,7 +9,7 @@ use objc::{msg_send, runtime, sel, sel_impl};
 
 use crate::{
     Result,
-    error::AudioError,
+    aoerror::AudioError,
     foundation::{create_cf_array_ref, create_cf_number_ref, create_cf_string_ref},
 };
 

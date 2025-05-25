@@ -1,10 +1,10 @@
 //! provide macos audio
 
 mod core_audio;
-mod error;
+mod aoerror;
 mod foundation;
 
-use error::{AudioError, Result};
+use aoerror::{AudioError, Result};
 use std::cell;
 
 pub use core_audio::process;
