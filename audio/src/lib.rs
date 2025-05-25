@@ -1,7 +1,7 @@
 //! provide macos audio
 
 mod core_audio;
-mod aoerror;
+pub mod aoerror;
 mod foundation;
 
 use aoerror::{AudioError, Result};

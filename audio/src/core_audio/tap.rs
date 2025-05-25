@@ -13,6 +13,8 @@ use crate::{
     foundation::{create_cf_array_ref, create_cf_number_ref, create_cf_string_ref},
 };
 
+use super::{build_property_address, get_property_data_string};
+
 /// AudioTapDescription builder
 #[derive(Debug)]
 pub struct AudioTapDescriptionBuilder {
@@ -151,4 +153,10 @@ unsafe extern "C" {
     ) -> coreaudio_sys::OSStatus;
 
     pub fn AudioHardwareDestroyProcessTap(inTapID: AudioObjectID) -> coreaudio_sys::OSStatus;
+}
+
+/// query uid
+pub fn query_uid(tap: &AudioTap) -> Result<String> {
+    let addr = build_property_address(coreaudio_sys::kAudioTapPropertyUID);
+    get_property_data_string(tap.audio_object_id, &addr)
 }

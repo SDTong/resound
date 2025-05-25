@@ -7,6 +7,8 @@ use crate::interactive::{self, PROMPT_DEFAULT_COW, PROMPT_ERR_COMMOND_COW};
 mod process_ope;
 mod re_ope;
 
+const TAP_NAME_DEFAULT: &str = "resoundTap";
+
 // start
 pub(super) fn run() {
     let mut commond;

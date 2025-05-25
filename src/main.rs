@@ -3,8 +3,9 @@
 //! 交互式命令，通常情况下，格式为： 对象 + 动作 + 参数
 
 mod interactive;
-mod operate;
+mod commond_ope;
+mod rserror;
 
 fn main() {
-    operate::run();
+    commond_ope::run();
 }
