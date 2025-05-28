@@ -1,4 +1,4 @@
-use audio::{aggregate_device, process, tap};
+use audio::aggregate_device;
 
 fn main() {
     let aggregate_device = aggregate_device::AudioAggregateDevice::builder("test-ag-de-name", "test-ag-de-uid")
