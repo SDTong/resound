@@ -2,12 +2,15 @@
 
 use std::borrow::Cow;
 
-use audio::{AudioObjectId, tap};
+use audio::{aggregate_device, tap, AudioObjectId};
 
 use crate::interactive::{PROMPT_ERR_COMMOND_COW, print_list};
 
 use crate::commond_ope;
 use crate::rserror::Result;
+
+const DEFAULT_AGGREGATE_DEVICE_NAME: &str = "resound-aggregate-device";
+const DEFAULT_AGGREGATE_DEVICE_UID: &str = "ABF64EB6-DC77-4251-80E2-1E773C25755E";
 
 pub(super) fn run_commond<'a, I>(commond_iter: &mut I) -> Cow<'_, str>
 where
@@ -73,6 +76,11 @@ fn recond_sound(process_id: AudioObjectId) -> Result<Cow<'static, str>> {
     let tap_uid = tap::query_uid(&tap)?;
     println!("tap_uid: {}", tap_uid);
     // create aggregate device
+    let aggregate_device = aggregate_device::AudioAggregateDevice::builder(DEFAULT_AGGREGATE_DEVICE_NAME, DEFAULT_AGGREGATE_DEVICE_UID)
+        .private(false)
+        .tap_list(vec![tap_uid])
+        .build()?;
+    println!("aggregate_device: {:?}", aggregate_device);
     // 读取stream 格式
     // create audio file
     // create io proc id

@@ -70,8 +70,13 @@ impl AudioAggregateDeviceBuilder {
         self
     }
 
-    pub fn build(&self) -> Result<AudioAggregateDevice> {
-        AudioAggregateDevice::create(self)
+    pub fn tap_list(mut self, tap_list: Vec<String>) -> Self {
+        self.tap_list = Some(tap_list);
+        self
+    }
+
+    pub fn build(self) -> Result<AudioAggregateDevice> {
+        AudioAggregateDevice::create(&self)
     }
 }
 
