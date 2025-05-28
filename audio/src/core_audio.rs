@@ -4,13 +4,13 @@ use std::{ffi::c_void, mem, ptr::null};
 
 use coreaudio_sys::{AudioObjectID, AudioObjectPropertyAddress, CFStringRef, UInt32};
 
-use crate::{Result, aoerror::AudioError, foundation};
+use crate::{Result, foundation};
 
 // 检查 AudioHardwareBase.h 函数结果
 macro_rules! check_status {
     ($msg:expr, $status:expr) => {
         if $status != crate::core_audio::K_AUDIO_HARDWARE_NO_ERROR {
-            return Err(AudioError::with_status_msg(
+            return Err(crate::aoerror::AudioError::with_status_msg(
                 $msg,
                 crate::core_audio::err_msg_hardware_status($status),
                 $status,
@@ -19,6 +19,18 @@ macro_rules! check_status {
     };
 }
 
+// 检查core audio函数执行结果，不抛出异常
+// 用于自定义drop函数中，检查删除结果
+macro_rules! eprintln_status {
+    ($msg:expr, $status:expr) => {
+        if $status != crate::core_audio::K_AUDIO_HARDWARE_NO_ERROR {
+            let status_msg = crate::core_audio::err_msg_hardware_status($status);
+            eprintln!("{}: {}[OSStatus: {}]", $msg, status_msg, $status);
+        }
+    };
+}
+
+pub mod aggregate_device;
 pub mod process;
 pub mod tap;
 

@@ -2,7 +2,7 @@
 
 use std::borrow::Cow;
 
-use audio::{tap, AudioObjectId};
+use audio::{AudioObjectId, tap};
 
 use crate::interactive::{PROMPT_ERR_COMMOND_COW, print_list};
 
@@ -36,7 +36,7 @@ where
         // todo
         todo!()
     }
-    
+
     match recond_sound(process_id) {
         Ok(cow) => cow,
         Err(error) => Cow::from(error.to_string()),
@@ -58,18 +58,18 @@ const HELP_CONTENT: [[(Cow<'_, str>, Cow<'_, str>); 1]; 2] = [
 fn recond_sound(process_id: AudioObjectId) -> Result<Cow<'static, str>> {
     // create tap
     let tap_description_builder = tap::AudioTapDescriptionBuilder {
-            name: commond_ope::TAP_NAME_DEFAULT.to_string(),
-            uid: None,
-            processes: vec![process_id],
-            mono: false,
-            exclusive: false,
-            mixdown: true,
-            private: false,
-            device_uid: None,
-            stream: None,
+        name: commond_ope::TAP_NAME_DEFAULT.to_string(),
+        uid: None,
+        processes: vec![process_id],
+        mono: false,
+        exclusive: false,
+        mixdown: true,
+        private: false,
+        device_uid: None,
+        stream: None,
     };
     let tap_description = tap_description_builder.build()?;
-    let tap = tap::AudioTap::new(&tap_description)?;
+    let tap = tap::AudioTap::create(&tap_description)?;
     let tap_uid = tap::query_uid(&tap)?;
     println!("tap_uid: {}", tap_uid);
     // create aggregate device

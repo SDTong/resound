@@ -1,16 +1,24 @@
 //! provide macos audio
 
-mod core_audio;
 pub mod aoerror;
+mod core_audio;
 mod foundation;
 
 use aoerror::{AudioError, Result};
 use std::cell;
 
+pub use core_audio::aggregate_device;
 pub use core_audio::process;
 pub use core_audio::tap;
 // 统一外部模块使用的定义
 pub type AudioObjectId = coreaudio_sys::AudioObjectID;
+
+// 标记 c_void 和 core foundtion 中的 xxRef
+pub(crate) trait Ref {}
+impl Ref for *const std::ffi::c_void {}
+impl Ref for coreaudio_sys::CFNumberRef {}
+impl Ref for coreaudio_sys::CFStringRef {}
+impl Ref for coreaudio_sys::CFDictionaryRef {}
 
 fn get_or_try_init<'a, T, F>(once_cell: &'a cell::OnceCell<T>, f: F) -> Result<&'a T>
 where

@@ -15,6 +15,11 @@ use crate::{
 
 use super::{build_property_address, get_property_data_string};
 
+// key start
+// coreaudio-sys 绑定的key，都是c风格的，用于创建CFStringRef时，多一个\0字符
+pub(crate) const K_AUDIO_SUB_TAP_UIDKEY: &str = "uid";
+// key end
+
 /// AudioTapDescription builder
 #[derive(Debug)]
 pub struct AudioTapDescriptionBuilder {
@@ -119,29 +124,30 @@ impl Drop for AudioTapDescription {
 /// encapsulation of tap
 #[derive(Debug)]
 pub struct AudioTap {
+    /// false: no destroy when drop(), true: destroy when drop()
+    destroy: bool,
     audio_object_id: AudioObjectID,
 }
 
 impl AudioTap {
     /// 创建 Process Tap
-    pub fn new(desc: &AudioTapDescription) -> Result<Self> {
+    pub fn create(desc: &AudioTapDescription) -> Result<Self> {
         let mut audio_object_id = 0;
         let status =
             unsafe { AudioHardwareCreateProcessTap(desc.tap_description, &mut audio_object_id) };
         check_status!("create process tap fail", status);
-        Ok(AudioTap { audio_object_id })
+        Ok(AudioTap {
+            destroy: true,
+            audio_object_id,
+        })
     }
 }
 
 impl Drop for AudioTap {
     fn drop(&mut self) {
-        let status = unsafe { AudioHardwareDestroyProcessTap(self.audio_object_id) };
-        if status != super::K_AUDIO_HARDWARE_NO_ERROR {
-            let status_msg = super::err_msg_hardware_status(status);
-            eprintln!(
-                "destroy process tap fail: {}[OSStatus: {}]",
-                status_msg, status
-            );
+        if self.destroy {
+            let status = unsafe { AudioHardwareDestroyProcessTap(self.audio_object_id) };
+            eprintln_status!("destroy process tap fail", status);
         }
     }
 }
