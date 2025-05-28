@@ -10,7 +10,7 @@ use coreaudio_sys::{
 use crate::{
     aoerror::Result,
     foundation::{
-        self, create_cf_array_ref, create_cf_dictionary_ref, create_cf_number_ref,
+        create_cf_array_ref, create_cf_dictionary_ref, create_cf_number_ref,
         create_cf_string_ref,
     },
 };

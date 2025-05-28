@@ -1,15 +1,14 @@
 //! provide CFDictionary operate
 
-use std::ffi::c_void;
 
-use coreaudio_sys::{CFDictionaryCreate, CFDictionaryRef, CFStringRef, kCFAllocatorDefault};
+use coreaudio_sys::{CFDictionaryCreate, CFDictionaryRef, kCFAllocatorDefault};
 
 use crate::{
     Ref,
     aoerror::{AudioError, Result},
 };
 
-use super::{acf_index::CFIndexConvertible, create_cf_number_ref};
+use super::acf_index::CFIndexConvertible;
 
 // 和macos的 core audio 框架交互时，部分函数会获取 CFDictionaryRef 的所有权，
 // 所以只提供 crate 内部函数，不做rust风格封装
