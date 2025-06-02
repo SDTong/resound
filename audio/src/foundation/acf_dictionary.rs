@@ -1,6 +1,5 @@
 //! provide CFDictionary operate
 
-
 use coreaudio_sys::{CFDictionaryCreate, CFDictionaryRef, kCFAllocatorDefault};
 
 use crate::{

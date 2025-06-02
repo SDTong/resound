@@ -7,5 +7,5 @@ edition = "2024"
 cargo-clippy = []
 
 [dependencies]
-coreaudio-sys = { version = "0.2", default-features = false, features = ["core_audio"] }
+coreaudio-sys = { version = "0.2", default-features = false, features = ["core_audio", "audio_toolbox"] }
 objc = "0.2"

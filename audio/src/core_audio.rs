@@ -31,7 +31,10 @@ macro_rules! eprintln_status {
 }
 
 pub mod aggregate_device;
+pub mod device;
+pub mod ext_audio_file;
 pub mod process;
+pub mod stream;
 pub mod tap;
 
 const CF_STR_REF_SIZE: UInt32 = mem::size_of::<CFStringRef>() as UInt32;

@@ -13,30 +13,31 @@ use super::{build_property_address, get_property_data_list, get_property_data_st
 /// coreAudio中的Process不支持name属性，可以查询对应进程ID(pid)的name属性
 #[derive(Debug)]
 pub struct AudioProcess {
-    id: AudioObjectID,
+    audio_object_id: AudioObjectID,
     // bundle： 包，
     // 通常是反向域名表示法（Reverse Domain Name Notation）
+    // 只有不可变的属性,可以用OnceCell实现懒加载
     bundle_id: OnceCell<String>,
     // name: String,
 }
 
 impl AudioProcess {
     pub fn get_id(&self) -> AudioObjectID {
-        self.id
+        self.audio_object_id
     }
     /// get bundle id
     /// lazy loading
     /// If it is run for the first time, the bundle will be query;
     /// otherwise, the previous query results will be returned
     pub fn get_bundle_id(&self) -> Result<&String> {
-        get_or_try_init(&self.bundle_id, || bundle_id(self.id))
+        get_or_try_init(&self.bundle_id, || bundle_id(self.audio_object_id))
     }
 }
 
 impl From<AudioObjectID> for AudioProcess {
     fn from(id: AudioObjectID) -> Self {
         AudioProcess {
-            id,
+            audio_object_id: id,
             bundle_id: OnceCell::new(),
         }
     }
@@ -45,13 +46,13 @@ impl From<AudioObjectID> for AudioProcess {
 /// find all process
 /// only init id, other value lazy loading
 pub fn list() -> Result<Vec<AudioProcess>> {
-    list_with_id(coreaudio_sys::kAudioObjectSystemObject)
+    list_by_id(coreaudio_sys::kAudioObjectSystemObject)
 }
 
 // find process by id
 // only init id, other value lazy loading
-fn list_with_id(id: AudioObjectID) -> Result<Vec<AudioProcess>> {
-    let id_vec = list_id_with_id(id)?;
+fn list_by_id(id: AudioObjectID) -> Result<Vec<AudioProcess>> {
+    let id_vec = list_id_by_id(id)?;
     let audio_process_vec = id_vec
         .into_iter()
         .map(|id| AudioProcess::from(id))
@@ -61,7 +62,7 @@ fn list_with_id(id: AudioObjectID) -> Result<Vec<AudioProcess>> {
 
 // find process id by id
 #[inline]
-fn list_id_with_id(id: AudioObjectID) -> Result<Vec<AudioObjectID>> {
+fn list_id_by_id(id: AudioObjectID) -> Result<Vec<AudioObjectID>> {
     let addr = build_property_address(coreaudio_sys::kAudioHardwarePropertyProcessObjectList);
     get_property_data_list(id, &addr)
 }

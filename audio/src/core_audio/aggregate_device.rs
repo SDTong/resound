@@ -1,6 +1,6 @@
 //! AggregateDevice of core audio
 
-use std::ffi::c_void;
+use std::{ffi::c_void, ops::Deref};
 
 use coreaudio_sys::{
     AudioDeviceID, AudioHardwareCreateAggregateDevice, AudioHardwareDestroyAggregateDevice,
@@ -10,8 +10,7 @@ use coreaudio_sys::{
 use crate::{
     aoerror::Result,
     foundation::{
-        create_cf_array_ref, create_cf_dictionary_ref, create_cf_number_ref,
-        create_cf_string_ref,
+        create_cf_array_ref, create_cf_dictionary_ref, create_cf_number_ref, create_cf_string_ref,
     },
 };
 
@@ -85,7 +84,16 @@ impl AudioAggregateDeviceBuilder {
 pub struct AudioAggregateDevice {
     /// false: 当实例释放时，不删除device, true: 当实例释放时，删除device
     destroy: bool,
-    audio_object_id: AudioDeviceID,
+    pub audio_device_id: AudioDeviceID,
+}
+
+impl Deref for AudioAggregateDevice {
+    type Target = u32;
+
+    #[inline]
+    fn deref(&self) -> &Self::Target {
+        &self.audio_device_id
+    }
 }
 
 impl AudioAggregateDevice {
@@ -137,7 +145,7 @@ impl AudioAggregateDevice {
         check_status!("create aggregate device fail", status);
         Ok(AudioAggregateDevice {
             destroy: true,
-            audio_object_id: aggregate_device_id,
+            audio_device_id: aggregate_device_id,
         })
     }
 }
@@ -146,7 +154,7 @@ impl AudioAggregateDevice {
 impl Drop for AudioAggregateDevice {
     fn drop(&mut self) {
         if self.destroy {
-            let status = unsafe { AudioHardwareDestroyAggregateDevice(self.audio_object_id) };
+            let status = unsafe { AudioHardwareDestroyAggregateDevice(self.audio_device_id) };
             eprintln_status!("destroy process tap fail", status);
         }
     }
