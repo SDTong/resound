@@ -14,19 +14,19 @@ pub use core_audio::process;
 pub use core_audio::stream;
 pub use core_audio::tap;
 
-pub use core_audio::K_AUDIO_HARDWARE_NO_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_NOT_RUNNING_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_UNSPECIFIED_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_UNKNOWN_PROPERTY_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_BAD_PROPERTY_SIZE_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_ILLEGAL_OPERATION_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_BAD_OBJECT_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_BAD_DEVICE_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_BAD_STREAM_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_UNSUPPORTED_OPERATION_ERROR;
-pub use core_audio::K_AUDIO_HARDWARE_NOT_READY_ERROR;
-pub use core_audio::K_AUDIO_DEVICE_UNSUPPORTED_FORMAT_ERROR;
 pub use core_audio::K_AUDIO_DEVICE_PERMISSIONS_ERROR;
+pub use core_audio::K_AUDIO_DEVICE_UNSUPPORTED_FORMAT_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_BAD_DEVICE_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_BAD_OBJECT_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_BAD_PROPERTY_SIZE_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_BAD_STREAM_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_ILLEGAL_OPERATION_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_NO_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_NOT_READY_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_NOT_RUNNING_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_UNKNOWN_PROPERTY_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_UNSPECIFIED_ERROR;
+pub use core_audio::K_AUDIO_HARDWARE_UNSUPPORTED_OPERATION_ERROR;
 
 // 统一外部模块使用的定义
 pub type AudioObjectId = coreaudio_sys::AudioObjectID;

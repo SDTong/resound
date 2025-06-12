@@ -1,20 +1,20 @@
-//! process commond operation
+//! process command operation
 
 use std::borrow::Cow;
 
 use audio::process;
 
-use crate::interactive::{PROMPT_DEFAULT_COW, PROMPT_ERR_COMMOND_COW, print_list};
+use crate::interactive::{print_list, PROMPT_DEFAULT_COW, PROMPT_ERR_COMMAND_COW};
 
-pub(super) fn run_commond<'a, I>(commond_iter: &mut I) -> Cow<'_, str>
+pub(super) fn run_command<'a, I>(command_iter: &mut I) -> Cow<'_, str>
 where
     I: Iterator<Item = &'a str>, // Item 是 &'a str，生命周期 'a 确保字符串切片有效
 {
-    let token = commond_iter.next();
+    let token = command_iter.next();
     match token {
         Some("help") => help(),
         Some("listall") => list_all(),
-        _ => PROMPT_ERR_COMMOND_COW,
+        _ => PROMPT_ERR_COMMAND_COW,
     }
 }
 
@@ -46,6 +46,7 @@ fn list_all() -> Cow<'static, str> {
             vec
         })
         .collect::<Vec<Vec<(Cow<'_, str>, Cow<'_, str>)>>>();
+
     print_list(&content_vec);
 
     PROMPT_DEFAULT_COW

@@ -108,17 +108,15 @@ impl<T: AudioIoProc> AudioIoProcHandler<T> {
 
         // 将 inClientData 转换回 &mut T
         let audio_io_proc = unsafe { &mut *(in_client_data as *mut T) };
-        let result = panic::catch_unwind(panic::AssertUnwindSafe(|| {
-            unsafe {
-                audio_io_proc.proc(
-                    in_device,
-                    &(*in_now),
-                    &(*in_input_data),
-                    &(*in_input_time),
-                    &mut (*out_output_data),
-                    &(*in_output_time),
-                )
-            }
+        let result = panic::catch_unwind(panic::AssertUnwindSafe(|| unsafe {
+            audio_io_proc.proc(
+                in_device,
+                &(*in_now),
+                &(*in_input_data),
+                &(*in_input_time),
+                &mut (*out_output_data),
+                &(*in_output_time),
+            )
         }));
 
         match result {

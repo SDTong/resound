@@ -8,3 +8,5 @@ members = ["audio"]
 
 [dependencies]
 audio = {path = "audio"}
+tokio = { version = "1.45.1", features = ["full"] }
+libc = "0.2"

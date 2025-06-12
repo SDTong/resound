@@ -54,13 +54,16 @@ impl AudioExtAudioFile {
     pub fn write_audio_buffer_list_async(&mut self, io_data: &AudioBufferList) -> Result<()> {
         let float32_size = std::mem::size_of::<coreaudio_sys::Float32>() as u32;
         let buffer = &io_data.mBuffers[0];
-        let number_frames_to_record = buffer.mDataByteSize / (buffer.mNumberChannels * float32_size);
+        let number_frames_to_record =
+            buffer.mDataByteSize / (buffer.mNumberChannels * float32_size);
 
-        let status = unsafe { coreaudio_sys::ExtAudioFileWriteAsync(
-            self.ext_audio_file_ref,
-            number_frames_to_record, 
-            io_data
-        ) };
+        let status = unsafe {
+            coreaudio_sys::ExtAudioFileWriteAsync(
+                self.ext_audio_file_ref,
+                number_frames_to_record,
+                io_data,
+            )
+        };
         check_status!("ext audio file write fail", status);
         Ok(())
     }

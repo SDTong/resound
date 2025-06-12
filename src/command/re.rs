@@ -1,4 +1,4 @@
-//! record sound commond
+//! record sound command
 
 use std::borrow::Cow;
 use std::fs;
@@ -8,36 +8,36 @@ use audio::{
     ext_audio_file, stream, tap,
 };
 
-use crate::interactive::{PROMPT_ERR_COMMOND_COW, print_list};
+use crate::interactive::{print_list, PROMPT_ERR_COMMAND_COW};
 
-use crate::commond_ope;
+use crate::command;
 use crate::rserror::{Result, RsError};
 
 const DEFAULT_AGGREGATE_DEVICE_NAME: &str = "resound-aggregate-device";
 const DEFAULT_AGGREGATE_DEVICE_UID: &str = "ABF64EB6-DC77-4251-80E2-1E773C25755E";
 const DEFAULT_FILE_NAME: &str = "resound";
 
-pub(super) fn run_commond<'a, I>(commond_iter: &mut I) -> Cow<'_, str>
+pub(super) fn run_command<'a, I>(command_iter: &mut I) -> Cow<'_, str>
 where
     I: Iterator<Item = &'a str>, // Item 是 &'a str，生命周期 'a 确保字符串切片有效
 {
-    let token = commond_iter.next();
+    let token = command_iter.next();
     match token {
         Some("help") => help(),
-        Some("start") => start(commond_iter),
-        _ => PROMPT_ERR_COMMOND_COW,
+        Some("start") => start(command_iter),
+        _ => PROMPT_ERR_COMMAND_COW,
     }
 }
 
 // start recond sound
-fn start<'a, I>(commond_iter: &mut I) -> Cow<'_, str>
+fn start<'a, I>(command_iter: &mut I) -> Cow<'_, str>
 where
     I: Iterator<Item = &'a str>, // Item 是 &'a str，生命周期 'a 确保字符串切片有效
 {
     let process_id;
-    let token = commond_iter.next();
+    let token = command_iter.next();
     if let Some(id) = token {
-        // commond appoint process id
+        // command appoint process id
         // todo 需要检查ID是数字，需要检查ID存在，需要支持多个ID
         process_id = id.parse::<AudioObjectId>().unwrap();
     } else {
@@ -59,14 +59,17 @@ fn help() -> Cow<'static, str> {
 
 const HELP_CONTENT: [[(Cow<'_, str>, Cow<'_, str>); 1]; 2] = [
     [(Cow::Borrowed("help"), Cow::Borrowed("show this"))],
-    [(Cow::Borrowed("start"), Cow::Borrowed("start record sound. usage: re start process_id"))],
+    [(
+        Cow::Borrowed("start"),
+        Cow::Borrowed("start record sound. usage: re start process_id"),
+    )],
 ];
 
 // recond sound
 fn recond_sound(process_id: AudioObjectId) -> Result<Cow<'static, str>> {
     // create tap
     let tap_description_builder = tap::AudioTapDescriptionBuilder {
-        name: commond_ope::TAP_NAME_DEFAULT.to_string(),
+        name: command::TAP_NAME_DEFAULT.to_string(),
         uid: None,
         processes: vec![process_id],
         mono: false,
@@ -121,7 +124,7 @@ fn recond_sound(process_id: AudioObjectId) -> Result<Cow<'static, str>> {
         }
     }
     // create io proc id
-    let re_io_proc = ReIoProc {audio_ext_file_vec};
+    let re_io_proc = ReIoProc { audio_ext_file_vec };
     let mut audio_io_proc_handler = device::AudioIoProcHandler::new(&aggregate_device, re_io_proc);
     // start
     audio_io_proc_handler.start()?;
@@ -153,7 +156,7 @@ impl device::AudioIoProc for ReIoProc {
         _in_output_time: &AudioTimeStamp,
     ) -> OSStatus {
         let m_number_buffers = in_input_data.mNumberBuffers;
-        
+
         let mut all_success = true;
 
         for i in 0..m_number_buffers as usize {
@@ -162,7 +165,7 @@ impl device::AudioIoProc for ReIoProc {
             // 目前，没有对stream的情况做任何处理
             // 一个stream对应一个音频文件
             // 需要重新组装AudioBufferList，满足格式要求
-            let io_data = AudioBufferList{
+            let io_data = AudioBufferList {
                 mNumberBuffers: 1,
                 mBuffers: buffers,
             };
